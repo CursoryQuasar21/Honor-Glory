@@ -1,5 +1,5 @@
 <?php
-    use Guerrero; 
+    include_once "../interfaces/guerrero.php";
     class Heroe implements Guerrero{
 
         private $vida;

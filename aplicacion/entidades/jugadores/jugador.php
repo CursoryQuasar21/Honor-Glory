@@ -1,8 +1,8 @@
 <?php
 
-    use Vanguardia;
-    use Pesado;
-    use Asesino;
+    include_once "../personajes/vanguardia.php";
+    include_once "../personajes/pesado.php";
+    include_once "../personajes/asesino.php";
 
     class Jugador{
         private $nombre;

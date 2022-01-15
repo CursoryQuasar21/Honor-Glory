@@ -1,7 +1,7 @@
 <?php
     
     class Partida{
-        
+        private $id;
         private $jugadores;
         private $rondas;
         private $marcador;
@@ -14,6 +14,9 @@
             $this->estado=false;
         }
 
+        public function getId(){
+            return $this->id;
+        }
         public function getJugadores(){
             return $this->jugadores;
         }

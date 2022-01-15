@@ -10,30 +10,30 @@
     <div class="contenedor">
         <div class="registro">
             <h2>Introduce tus datos</h2>
-            <form>
+            <form name="formulario" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>"> 
                 <p>Nombre de usuario: </p>
-                <input type="text">
-                
+                <input type="text" name="nombre">
+
                 <p>Correo electrónico: </p>
-                <input type="email">
+                <input type="email" name="email">
 
                 <p>Contraseña: </p>
-                <input type="password">
+                <input type="password" name="pwd">
 
                 <p>Repite la contraseña: </p>
-                <input type="password">
+                <input type="password" name="pwdR">
 
                 <br>
                 <br>
                 
-                <input type="submit" value="Registrar">
-                <input type="reset" value="Borrar">
+                <button type="submit" name="submit">Sing Up</button>
+                <button type="reset">Reset</button>
             </form>
         </div>
     </div>
     <?php
 
-        //use Jugador;
+        include_once "../../entidades/jugadores/jugador.php";
 
         function filtrado($texto){
             $texto=trim($texto);
@@ -42,29 +42,47 @@
             return $texto;
         }
 
-        function verificado($nombre){
-            $con=new mysqli("localhost","root","","honorAndGlory");
-            if($con->connect_errno){
-                echo "Fallo la conexion";
-            }else{
-                $consulta=$con->prepare(
-                    "select correo from honorAndGlory.usuarios where nombre=?"
-                );
-                if($consulta!=null){
-                    $consulta->bind_param("s",$nombre);
-                    $consulta->execute();
-                    $consulta->store_result();
-                    $consulta->bind_result($nombre2);
-                    if($nombre2!=$nombre){
-                        return true;
-                    }else{
-                        return false;
-                    }
+        function verificarEmail($email){
+            $dsn="mysql:host=localhost;charset=utf8;dbname=honorandglory";
+            $options=array(PDO::ATTR_PERSISTENT=>true);
+            try{
+                $db=new PDO($dsn,"root","",$options);
+            }
+            catch(PDOException $e){
+                die("Error!: ". $e->getMessage()."<br>");
+            }
+            $query='select email from usuarios where email=?';
+            $queryResultado=$db->prepare($query);
+            $queryResultado->execute(array($email));
+            while($match=$queryResultado->fetch(PDO::FETCH_ASSOC)){
+                if($match!=null){
+                    return false;
                 }
             }
+            return true;
         }
 
-        function verificadoPwd($pwd,$pwdR){
+        function verificarNombre($nombre){
+            $dsn="mysql:host=localhost;charset=utf8;dbname=honorandglory";
+            $options=array(PDO::ATTR_PERSISTENT=>true);
+            try{
+                $db=new PDO($dsn,"root","",$options);
+            }
+            catch(PDOException $e){
+                die("Error!: ". $e->getMessage()."<br>");
+            }
+            $query='select nombre from usuarios where nombre=?';
+            $queryResultado=$db->prepare($query);
+            $queryResultado->execute(array($nombre));
+            while($match=$queryResultado->fetch(PDO::FETCH_ASSOC)){
+                if($match!=null){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function verificarPwd($pwd,$pwdR){
             if($pwd==$pwdR){
                 return true;
             }else{
@@ -72,32 +90,26 @@
             }
         }
 
-        function verificadorDatos($email,$nombre,$pwd,$pwdR){
-            if(!empty(filtrado($email) and !empty(filtrado($nombre) and !empty(filtrado($pwd) ){
+        function registrarUsuario($email,$nombre,$pwd){
+            $dsn ="mysql:host=localhost;dbname=honorandglory";
+            $conn = new PDO( $dsn, 'root', '' );
+            $datos=array(':email'=>$email, ':nombre'=>$nombre, ':pwd'=>$pwd);
+            $sql = ' INSERT INTO usuarios (email,nombre,pwd)
+            VALUES ( :email , :nombre, :pwd ) ' ;
+            $q = $conn->prepare($sql);
+            $q->execute($datos);
+            $_SESSION['usuario']=new Jugador($nombre,0,0);
+            header("Location: ../../../../../homepage/homepage.php");
+        }
+
+        function verificarDatos($email,$nombre,$pwd,$pwdR){
+            if(!empty(filtrado($email)) and !empty(filtrado($nombre)) and !empty(filtrado($pwd)) and !empty(filtrado($pwdR))){
+                $email=filtrado($_POST['email']);
                 $nombre=filtrado($_POST['nombre']);
                 $pwd=filtrado($_POST['pwd']);
                 $pwdR=filtrado($_POST['pwdR']);
-                if(verificado($nombre) and verificadoPwd($pwd,$pwdR)){
-                    session_start();
-                    $con=new mysqli("localhost","root","","honorAndGlory");
-                    if($con->connect_errno){
-                        echo "Fallo la conexion";
-                    }
-                    else{
-                        $consulta=$con->prepare(
-                            "INSERT INTO honorAndGlory.usuarios (nombre,pwd) VALUES ($nombre,$pwd)"
-                        );
-                        if($consulta!=null){
-                            $consulta->bind_param("s",$nombre);
-                            $consulta->execute();
-                            $consulta->store_result();
-                            $consulta->bind_result($nombre,$puntuacion);
-                            while($consulta->fetch()){
-                                $_SESSION['usuario']=new Jugador($nombre,$puntuacion,0);
-                                header("Location: ../../../../../homepage/homepage.php");
-                            }
-                        }
-                    }
+                if(verificarEmail($email) and verificarNombre($nombre) and verificarPwd($pwd,$pwdR)){
+                    registrarUsuario($email,$nombre,$pwd);
                 }else{
                     //Datos de inicio de sesion erroneos
                 }
@@ -105,11 +117,11 @@
                 //Datos de inicio vacios uno o mas
             }
         }
-        function registrar(){
-            
-        }
-        if(isset($_POST['registrar'])){
-            
+
+        if(isset($_POST['submit'])){
+            if(isset($_POST['email']) and isset($_POST['nombre']) and isset($_POST['pwd']) and isset($_POST['pwdR'])){
+                verificarDatos($_POST['email'],$_POST['nombre'],$_POST['pwd'],$_POST['pwdR']);
+            }
         }
     ?>
 </body>

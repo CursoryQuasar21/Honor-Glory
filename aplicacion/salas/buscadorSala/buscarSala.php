@@ -17,7 +17,7 @@
                 <br>
                 <br>
 
-                <input type="submit" name="submit" value="Entrar">
+                <button type="submit" name="submit" value="Join"></button>
 
             </form>
         </div>
