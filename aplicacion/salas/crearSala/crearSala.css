@@ -1,0 +1,133 @@
+body{
+display:flex;
+flex-direction:column;
+min-height:100vh;
+background-color:#2F3A3C;
+font-family:Arial;
+}
+
+.cabecera{
+display:flex;
+justify-content:center;
+border:dotted 2px black;
+
+}
+
+ul, ol {
+    list-style:none;
+}
+
+.nav li a {
+	background-color:#576C6F;
+	color:white;
+	text-decoration:none;
+	padding: 10px 45px;
+	display:block;
+}
+
+.nav > li {
+	float:left;
+}
+
+.nav li ul {
+	display:none;
+	
+}
+
+.nav li:hover ul {
+	display:block;
+}
+
+a {
+color:white;
+text-decoration:none;
+font-family:monospace;
+font-size:150%;
+}
+
+
+.nav li a:hover{
+    background-color:#434343;
+    color:white;
+    
+}
+
+.textoP{
+	color:white;
+	margin-top:10px;
+	border:2px black dotted;
+	padding:12px;
+	display:flex;
+	margin-right:60%;
+	}
+	
+.titulo{
+margin:auto;
+text-align:center;
+color:white;
+border:dotted 2px black;
+margin-top:10px;
+padding:12px;
+}
+
+img{
+margin:auto;
+margin-top:10px;
+width:400px;
+height:500px;
+}
+
+img:hover{
+opacity:70%;
+filter:invert(15%);
+
+}
+
+
+.personajes{
+margin:auto;
+}
+
+.personajes2{
+margin:auto;
+}
+
+.personajes3{
+margin:auto;
+}
+footer{
+background-color:black;
+opacity:70%;
+text-align:center;
+margin-top:auto;
+color:white;
+border: 2px dotted black;
+}
+
+.foot{
+text-align:center;
+border:none;
+width:60px;
+height:40px;
+padding-bottom:12px;
+padding-left:12px;
+
+}
+.foot:hover{
+width:80px;
+height:60px;
+}
+
+.redes{
+padding-left:12px;
+}
+
+.texto{
+text-align:center;
+margin:auto;
+}
+
+.textoP{
+text-align:center;
+margin:auto;
+}
